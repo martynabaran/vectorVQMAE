@@ -307,7 +307,7 @@ class Classifier_Train(Train):
 
         """ Follow """
         if follow:
-            self.follow = Follow("classifier", dir_save=r"checkpoint", variable=vars(self.model))
+            self.follow = Follow("classifier", dir_save=r"/net/tscratch/people/plgmarbar/ravdess/vsqmae_checkpoints", variable=vars(self.model))
 
     @staticmethod
     def to_tube(input, size_patch=4, depth_t=5):
