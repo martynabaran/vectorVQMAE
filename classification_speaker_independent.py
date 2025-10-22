@@ -33,10 +33,10 @@ if device == "cuda":
 
 # Configuration parameters
 Total_folds = 5
-root = r"/Users/martynabaran/Downloads/ravdess"
+root = r"/net/scratch/people/plgmarbar/ravdess/ravdess"
 dataset_name = "ravdess"
-h5_path = r"H5/ravdess.hdf5"
-mae_path = r"checkpoint/RSMAE/2023-2-22/12-45"
+h5_path = r"/net/scratch/people/plgmarbar/ravdess/H5/ravdess.hdf5"
+mae_path = r"/net/scratch/people/plgmarbar/ravdess/checkpoint/RSMAE/2023-2-22/12-45"
 
 print(f"Dataset root: {root}")
 print(f"H5 cache path: {h5_path}")
@@ -70,7 +70,7 @@ print("H5 directory created/verified")
 # Load VQ-VAE model
 print("Loading VQ-VAE model...")
 vqvae = SpeechVQVAE(**cfg.vqvae)
-vqvae.load(path_model=r"checkpoint/SPEECH_VQVAE/2022-12-27/21-42/model_checkpoint")
+vqvae.load(path_model=r"/net/scratch/people/plgmarbar/ravdess/checkpoint/SPEECH_VQVAE/model_checkpoint")
 print("VQ-VAE model loaded successfully!")
 
 # Load dataset
