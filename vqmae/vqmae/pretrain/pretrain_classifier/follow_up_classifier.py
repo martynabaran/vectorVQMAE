@@ -39,7 +39,7 @@ class Follow:
         path_time.mkdir(exist_ok=True)
         self.path = path_time
         #shutil.copytree(r"config_mae", path_time / "config_classifier")
-        shutil.copytree(r"config_mae", path_time / "config_classifier",  dirs_exist_ok=True, symlinks=True)
+        # shutil.copytree(r"config_mae", path_time / "config_classifier",  dirs_exist_ok=True, symlinks=True)
     def find_best_model(self, loss_validation, f1_score):
         if loss_validation >= self.best_loss:
             self.best_loss = loss_validation
@@ -49,9 +49,10 @@ class Follow:
             return False
 
     def save_model(self, boolean: bool, parameters: dict, epoch: int, every_step: int = 10):
-        if epoch % every_step == 0 and boolean:
-            torch.save(parameters, f'{self.path}/model_checkpoint')
-            print(f"Model saved: [loss:{parameters['loss']}]")
+        # if epoch % every_step == 0 and boolean:
+        #     torch.save(parameters, f'{self.path}/model_checkpoint')
+        #     print(f"Model saved: [loss:{parameters['loss']}]")
+        pass
 
     def push(self, epoch: int, loss_train: float, loss_validation: float):
         self.table['epoch'].append(epoch)
