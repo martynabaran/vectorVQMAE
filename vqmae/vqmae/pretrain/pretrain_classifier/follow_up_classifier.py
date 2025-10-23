@@ -38,8 +38,8 @@ class Follow:
         path_time = path_date / time
         path_time.mkdir(exist_ok=True)
         self.path = path_time
-        shutil.copytree(r"config_mae", path_time / "config_classifier")
-
+        #shutil.copytree(r"config_mae", path_time / "config_classifier")
+        shutil.copytree(r"config_mae", path_time / "config_classifier",  dirs_exist_ok=True, symlinks=True)
     def find_best_model(self, loss_validation, f1_score):
         if loss_validation >= self.best_loss:
             self.best_loss = loss_validation

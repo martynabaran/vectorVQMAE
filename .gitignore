@@ -1,0 +1,15 @@
+# Ignore everything starting with "config_mae/config_mae"
+config_mae/config_mae*
+
+# Ignore all error files starting with "error-"
+error-*.err
+
+# Ignore all output files starting with "output-"
+output-*.out
+
+# Ignore the outputs directory
+outputs/
+
+# Ignore compiled Python cache files
+vqmae/__pycache__/
+vqmae/vqmae/__py*

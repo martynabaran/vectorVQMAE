@@ -289,7 +289,7 @@ class Classifier_Train(Train):
                                            weight_decay=config_training["weight_decay"])
         lr_func = lambda epoch: min((epoch + 1) / (40 + 1e-8),
                                     0.5 * (math.cos(epoch / config_training["total_epoch"] * math.pi) + 1))
-        self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=lr_func, verbose=True)
+        self.lr_scheduler = torch.optim.lr_scheduler.LambdaLR(self.optimizer, lr_lambda=lr_func)
 
         """ Loss """
         # weights = training_data.get_weights(num_class=8)
@@ -315,6 +315,7 @@ class Classifier_Train(Train):
         t1 = input.shape[1] // depth_t
         input = rearrange(input, 'b (t1 t2) (c1 l1) -> b (t1 c1) (l1 t2)', t1=t1, t2=depth_t, c1=c1, l1=size_patch)
         return input
+
 
     def one_epoch(self):
         self.model.train()
@@ -442,17 +443,17 @@ class Classifier_Train(Train):
     #         plt.savefig(f'{self.follow.path}/matrix_confusion.svg')
     #     return losses, acces, f1
 
-    # def load(self, path: str = "", optimizer: bool = True):
-    #     print("LOAD [", end="")
-    #     # checkpoint = torch.load(path)
-    #     checkpoint = torch.load(path, map_location=self.device)
-    #     self.model.load_state_dict(checkpoint['model'])
-    #     if optimizer:
-    #         self.optimizer.load_state_dict(checkpoint['optimizer'])
-    #         self.lr_scheduler.load_state_dict(checkpoint['scheduler'])
-    #     self.load_epoch = checkpoint['epoch']
-    #     loss = checkpoint['loss']
-    #     print(f"model: ok  | optimizer:{optimizer}  |  loss: {loss}  |  epoch: {self.load_epoch}]")
+    def load(self, path: str = "", optimizer: bool = True):
+         print("LOAD [", end="")
+         # checkpoint = torch.load(path)
+         checkpoint = torch.load(path, map_location=self.device)
+         self.model.load_state_dict(checkpoint['model'])
+         if optimizer:
+             self.optimizer.load_state_dict(checkpoint['optimizer'])
+             self.lr_scheduler.load_state_dict(checkpoint['scheduler'])
+         self.load_epoch = checkpoint['epoch']
+         loss = checkpoint['loss']
+         print(f"model: ok  | optimizer:{optimizer}  |  loss: {loss}  |  epoch: {self.load_epoch}]")
 
     # def plot_3D(self):
     #     pca = TSNE(n_components=3)

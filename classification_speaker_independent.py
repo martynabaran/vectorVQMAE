@@ -33,10 +33,10 @@ if device == "cuda":
 
 # Configuration parameters
 Total_folds = 5
-root = r"/net/scratch/people/plgmarbar/ravdess/ravdess"
+root = r"/net/tscratch/people/plgmarbar/ravdess/ravdess"
 dataset_name = "ravdess"
-h5_path = r"/net/scratch/people/plgmarbar/ravdess/H5/ravdess.hdf5"
-mae_path = r"/net/scratch/people/plgmarbar/ravdess/checkpoint/RSMAE/2023-2-22/12-45"
+h5_path = r"/net/tscratch/people/plgmarbar/ravdess/H5/ravdess.hdf5"
+mae_path = r"/net/tscratch/people/plgmarbar/ravdess/checkpoint/RSMAE/2023-2-22/12-45"
 
 print(f"Dataset root: {root}")
 print(f"H5 cache path: {h5_path}")
@@ -55,14 +55,16 @@ def fold_creation(list_id, num_fold, k=5):
 from hydra import initialize, compose
 
 # Initialize Hydra
-with initialize(config_path=f"{mae_path}/config_mae"):
+with initialize(config_path=f"config_mae"):
     cfg = compose(config_name="config")
 
 print("Configuration loaded successfully!")
+cfg.train["total_epoch"] = 5
+cfg.train["warmup_epoch"]=5
 print(f"Training config: {cfg.train}")
 print(f"Model config: {cfg.model}")
 print(f"VQ-VAE config: {cfg.vqvae}")
-
+cfg.train["total_epoch"] = 5
 # Create H5 directory if it doesn't exist
 os.makedirs("H5", exist_ok=True)
 print("H5 directory created/verified")
@@ -70,7 +72,7 @@ print("H5 directory created/verified")
 # Load VQ-VAE model
 print("Loading VQ-VAE model...")
 vqvae = SpeechVQVAE(**cfg.vqvae)
-vqvae.load(path_model=r"/net/scratch/people/plgmarbar/ravdess/checkpoint/SPEECH_VQVAE/model_checkpoint")
+vqvae.load(path_model=r"/net/tscratch/people/plgmarbar/ravdess/checkpoint/SPEECH_VQVAE/model_checkpoint")
 print("VQ-VAE model loaded successfully!")
 
 # Load dataset
@@ -140,9 +142,24 @@ print(f"Validation samples: {len(data_validation.table)}")
 
 # Load MAE model
 print("Loading MAE model...")
+#checkpoint = torch.load(f"{mae_path}/model_checkpoint", map_location='cpu')
+#state_dict = checkpoint['model_state_dict'] if 'model_state_dict' in checkpoint else checkpoint
+#model.load_state_dict(state_dict, strict=False)
+
+#mae = MAE(**cfg.model, trainable_position=True)
+#mae.load(path_model=f"{mae_path}/model_checkpoint")
+#size_model(mae, "mae")
 mae = MAE(**cfg.model, trainable_position=True)
-mae.load(path_model=f"{mae_path}/model_checkpoint")
+
+# Load checkpoint safely (ignore unexpected/missing keys)
+checkpoint = torch.load(f"{mae_path}/model_checkpoint", map_location='cpu')
+state_dict = checkpoint.get('model_state_dict', checkpoint)  # handle dict-wrapped checkpoints
+mae.load_state_dict(state_dict, strict=False)  # strict=False skips mismatched keys
+
+# Optional: print summary of loaded model
 size_model(mae, "mae")
+print("MAE model loaded successfully (partial load if keys mismatched)!")
+
 print("MAE model loaded successfully!")
 
 
