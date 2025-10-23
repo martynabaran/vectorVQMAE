@@ -212,25 +212,25 @@ def save_checkpoint_if_best(model, optimizer, epoch, metrics, checkpoint_dir, pr
 
     if is_better:
         # save model - adapt this to your framework (torch.save, tf.keras.Model.save, etc.)
-        filename = f"checkpoint_epoch{epoch}_{primary_metric_name}_{cur_value:.6f}.pt"
-        filepath = os.path.join(checkpoint_dir, filename)
-        # Example for PyTorch:
-        try:
-            import torch
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict() if optimizer is not None else None,
-                'metrics': metrics
-            }, filepath)
-        except Exception:
-            # fallback: if not PyTorch, try model.save() for TF or other saving logic
-            try:
-                model.save(filepath)
-            except Exception as e:
-                # last resort: save only metrics
-                with open(filepath + '.metrics.json', 'w') as f:
-                    json.dump(metrics, f, indent=2)
+        # filename = f"checkpoint_epoch{epoch}_{primary_metric_name}_{cur_value:.6f}.pt"
+        # filepath = os.path.join(checkpoint_dir, filename)
+        # # Example for PyTorch:
+        # try:
+        #     import torch
+        #     torch.save({
+        #         'epoch': epoch,
+        #         'model_state_dict': model.state_dict(),
+        #         'optimizer_state_dict': optimizer.state_dict() if optimizer is not None else None,
+        #         'metrics': metrics
+        #     }, filepath)
+        # except Exception:
+        #     # fallback: if not PyTorch, try model.save() for TF or other saving logic
+        #     try:
+        #         model.save(filepath)
+        #     except Exception as e:
+        #         # last resort: save only metrics
+        #         with open(filepath + '.metrics.json', 'w') as f:
+        #             json.dump(metrics, f, indent=2)
 
         # update best meta
         best_meta['best_value'] = float(cur_value)
