@@ -102,7 +102,7 @@ print(f"Speakers per fold: {len(all_id) // Total_folds}")
 print(f"Speakers: {all_id[:10]}...")  # Show first 10 speakers
 
 import torch
-cfg.train["device"] = "cpu"
+
 
 # Initialize results storage
 accuracy_epoch = []
@@ -175,7 +175,7 @@ pretrain_classifier = Classifier_Train(mae,
                                        query2emo=False)
 print("Classifier training initialized!")
 
-cfg.train["total_epoch"] = 200
+
 
 # Train classifier for fold 1
 print("Starting training for fold 1...")
